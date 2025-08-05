@@ -42,7 +42,7 @@ export async function getObtainData(data) {
     return { code: -1, data: null, msg: "数据解析失败：缺少必要字段" };
   }
 
-  const uniqueId = author.unique_id || author.short_id|| music?.owner_handle // 如果unique_id为空，则使用short_id
+  const uniqueId = author.unique_id || author.short_id || music?.owner_handle; // 如果unique_id为空，则使用short_id
   const userhome = author.sec_uid
     ? `https://www.douyin.com/user/${author.sec_uid}`
     : "";
@@ -52,8 +52,9 @@ export async function getObtainData(data) {
       ? rawImages.map((image) => image.url_list?.[0] || "").filter(Boolean)
       : [];
 
+  const url = aweme_id ? `https://www.douyin.com/video/${aweme_id}` : "";
   // 处理视频URL和封面URL
-  const url = video?.bit_rate?.[0]?.play_addr?.url_list?.[0] ?? "";
+  const videoUrl = video?.bit_rate?.[0]?.play_addr?.url_list?.[0] ?? "";
   const noteCover = video?.cover?.url_list?.[0] ?? "";
   const cleanedDesc = (desc || "").replaceAll(invalid, repWith);
 
@@ -61,7 +62,7 @@ export async function getObtainData(data) {
     url,
     type,
     title: cleanedDesc,
-    videoUrl: url,
+    videoUrl: videoUrl,
     noteCover,
     musicUrl: music?.play_url?.uri ?? "",
     musicTitle: music?.title ?? "",

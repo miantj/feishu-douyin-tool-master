@@ -27,7 +27,7 @@
       </span>
     </div>
 
-    <!-- 链接所在列 -->
+    <!-- 获取数据类型 -->
     <el-form-item
       style="margin-top: 40px"
       :label="$t('labels.dataType')"
@@ -64,7 +64,7 @@
     </el-form-item> -->
 
     <!-- 链接所在列 -->
-    <el-form-item
+    <!-- <el-form-item
       style="margin-top: 40px"
       :label="$t('labels.link')"
       size="large"
@@ -82,7 +82,7 @@
           :value="meta.id"
         />
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
 
     <!-- 字段选择 -->
     <div class="map-fields-checklist">
@@ -233,6 +233,14 @@ const writeData = async () => {
         throw new Error(t("errorTip.emptyNoteLink"));
       }
 
+      // 显示数据获取进度
+      await bitable.ui.showToast({
+        toastType: "info",
+        message: `正在获取数据... (${recordList.indexOf(recordId) + 1}/${
+          recordList.length
+        })`,
+      });
+
       var response = await getQueryParams(link, dataType.value);
 
       console.log("writeData() >> response", response);
@@ -241,6 +249,11 @@ const writeData = async () => {
         await setRecord(table, recordId, errorData, mappedFields);
       } else {
         const infoData = response.data;
+        // 显示进度提示
+        await bitable.ui.showToast({
+          toastType: "info",
+          message: `正在处理 ${infoData.length} 条视频数据，请稍等...`,
+        });
         if (Array.isArray(infoData)) {
           // 逐条处理并写入，而不是批量写入
           for (let i = 0; i < infoData.length; i++) {
