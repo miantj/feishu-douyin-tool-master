@@ -236,13 +236,24 @@ const writeData = async () => {
       var response = await getQueryParams(link, dataType.value);
 
       console.log("writeData() >> response", response);
-      if (!response || response.code !== 0) {
+      if (!response || response.code == -1) {
         const errorData = { msg: response?.msg || "获取数据为空，请重试" };
         await setRecord(table, recordId, errorData, mappedFields);
       } else {
         const infoData = response.data;
         if (Array.isArray(infoData)) {
-          await addRecords(table, infoData, mappedFields);
+          // 逐条处理并写入，而不是批量写入
+          for (let i = 0; i < infoData.length; i++) {
+            const singleData = infoData[i];
+            console.log(
+              `正在处理第 ${i + 1}/${infoData.length} 条数据:`,
+              singleData
+            );
+
+            // 使用addRecords处理单条数据，这样可以复用现有的字段处理逻辑
+            await addRecords(table, [singleData], mappedFields);
+            console.log(`第 ${i + 1} 条数据写入完成`);
+          }
         } else {
           await setRecord(table, recordId, infoData, mappedFields);
         }
@@ -272,6 +283,10 @@ const getQueryParams = async (link, dataType) => {
   // 抖音视频详情数据
   if (dataType.value === "douyinDetail") {
     return await douyinApi.getGouyinDetail(link);
+  }
+  // 抖音作者视频列表
+  if (dataType.value === "douyinDouyinUserList") {
+    return await douyinApi.getDouyinUserList(link);
   }
   return { code: -1, msg: "获取数据错误" };
 };
@@ -306,8 +321,8 @@ onMounted(async () => {
   const table = await bitable.base.getActiveTable();
   const view = await table.getViewById(selection.viewId);
   fieldListSeView.value = await view.getFieldMetaList();
-  console.log("onMounted >> 多维表格字段", fieldListSeView.value);
-  console.log("onMounted >> 已选中的采集数据字段", checkedFieldsToMap.value);
+  // console.log("onMounted >> 多维表格字段", fieldListSeView.value);
+  // console.log("onMounted >> 已选中的采集数据字段", checkedFieldsToMap.value);
 
   // 设置链接字段的默认值
   const setDefaultLinkField = () => {

@@ -78,7 +78,7 @@ export async function addRecords(table, recordList, mappedFieldIdMap) {
     }));
 
     // 打印转换后的记录列表
-    console.log(recordValues);
+    // console.log(recordValues);
 
     // 调用 addRecords 函数保存记录
     await table.addRecords(recordValues);
@@ -90,11 +90,11 @@ export async function addRecords(table, recordList, mappedFieldIdMap) {
  * @param {object} infoData 数据
  * @param {object} mappedFieldIdMap 字段对应列id
  */
-const getRecordFields = async (infoData, mappedFields) => {
+export const getRecordFields = async (infoData, mappedFields) => {
     let recordFields = {}
     let feildId = ''
     let fetchDataTimeValue = Date.now()
-
+    console.log("getRecordFields ====>", infoData, mappedFields);
     for (let field in mappedFields) {
         let value = ''
 
@@ -103,7 +103,7 @@ const getRecordFields = async (infoData, mappedFields) => {
         let key = fieldConfig.key;
 
         feildId = mappedFields[field]
-        console.log("getRecordFields ====>", infoData);
+        // console.log("getRecordFields ====>", infoData);
            
         if (fieldConfig && fieldConfig.type === FieldType.Attachment) {
             let urlList = typeof infoData[key] === 'string' ? [infoData[key]] : infoData[key];
@@ -115,7 +115,7 @@ const getRecordFields = async (infoData, mappedFields) => {
                 .map(url => {
                     return config.serverHost + (fieldConfig.media == 'video' ?  "/douyin/file/getVideo?url=" : '/douyin/file/getImage?url=') + url;
                 });
-            console.log(urlList);
+            // console.log(urlList);
             if (urlList && urlList.length > 0) {
                 value = await getAttachmentCellValue({urlList, filename: "testfilename"});
             }
@@ -172,14 +172,14 @@ export async function getAttachmentCellValue({ urlList, filename}) {
                 const fileList = resultList
                     .filter(fileResult => fileResult.status === 'fulfilled')
                     .map(fulfilledFile => fulfilledFile.value);
-                console.log(fileList)
+                // console.log(fileList)
                 const idList = await bitable.base.batchUploadFile(fileList).catch((e) => {
                     console.error(e);
                     throw e;
                 });
                 if (idList && idList.length > 0) {
-                    console.log(idList)
-                    console.log(tokenToCellVaule)
+                    // console.log(idList)
+                    // console.log(tokenToCellVaule)
                     var cellValue = idList.map((fileToken, index) => {
                         var file = fileList[index]
                         return {
@@ -190,7 +190,7 @@ export async function getAttachmentCellValue({ urlList, filename}) {
                             type: file.type,
                         }
                     });
-                    console.log(cellValue)
+                    // console.log(cellValue)
                     return cellValue;
                 }
             }

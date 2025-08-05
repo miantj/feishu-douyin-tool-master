@@ -70,8 +70,8 @@ export const config = {
             label: '获取抖音作者视频列表', 
             value: 'douyinDouyinUserList', 
             path: '/douyin/getDouyinUserList',
-            canChooseField: [ "url", 'videoId', 'title', 'nickname', 'releaseTime', 'likeCount', 'shareCount', 'commentCount', 
-                'videoUrl', 'noteCover', 'userhome', 'msg', 'fetchDataTime', 'videoFile', 'noteCoverFile'
+            canChooseField: ["url", 'type', 'title', 'nickname', 'releaseTime','collectionCount', 'likeCount', 'shareCount', 'commentCount', 
+                'videoUrl', 'noteCover', 'musicUrl', 'musicTitle', 'signature', 'userhome', 'videoId', 'images', 'msg', 'fetchDataTime', 'videoFile', 'noteCoverFile'
             ],
         },
     ],
