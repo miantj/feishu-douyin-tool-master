@@ -70,51 +70,6 @@
         </el-table>
       </el-tab-pane>
 
-      <!-- 监控状态 -->
-      <el-tab-pane :label="$t('monitor.tabs.status')" name="status">
-        <el-card>
-          <el-descriptions :column="2" border>
-            <el-descriptions-item :label="$t('monitor.status.monitorEnabled')">
-              <el-tag :type="status.enabled ? 'success' : 'danger'">
-                {{ status.enabled ? "已启用" : "已停用" }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('monitor.status.totalUsers')">
-              {{ status.total_users }} / {{ status.monitored_users }}
-              {{ $t("monitor.status.enabledUsers") }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('monitor.status.intervalHours')">
-              {{ status.interval_hours }}小时
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('monitor.status.notifiedVideos')">
-              {{ status.notified_videos_count }}
-            </el-descriptions-item>
-            <el-descriptions-item
-              :label="$t('monitor.status.feishuConfigured')"
-            >
-              <el-tag :type="status.feishu_configured ? 'success' : 'warning'">
-                {{ status.feishu_configured ? "已配置" : "未配置" }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item
-              :label="$t('monitor.status.schedulerRunning')"
-            >
-              <el-tag
-                :type="schedulerStatus.scheduler_running ? 'success' : 'danger'"
-              >
-                {{ schedulerStatus.scheduler_running ? "运行中" : "已停止" }}
-              </el-tag>
-            </el-descriptions-item>
-          </el-descriptions>
-
-          <div style="margin-top: 20px">
-            <el-button @click="loadStatus" :loading="loadingStatus">
-              刷新状态
-            </el-button>
-          </div>
-        </el-card>
-      </el-tab-pane>
-
       <!-- 基础配置 -->
       <el-tab-pane :label="$t('monitor.tabs.config')" name="config">
         <el-card>
@@ -185,6 +140,14 @@
             </el-form-item>
 
             <el-form-item :label="$t('monitor.config.enableDeduplication')">
+              <template #label>
+                <span style="display: flex; align-items: center">
+                  {{ $t("monitor.config.enableDeduplication") }}
+                  <el-tooltip placement="top" content="相同视频不会重复通知">
+                    <el-icon class="el-icon--right"><QuestionFilled /></el-icon>
+                  </el-tooltip>
+                </span>
+              </template>
               <el-switch v-model="config.enable_deduplication" />
             </el-form-item>
 
@@ -197,22 +160,69 @@
               />
             </el-form-item>
 
-            <el-form-item label-width="60px">
-              <el-button type="primary" @click="saveConfig" :loading="saving">
-                {{ $t("monitor.config.save") }}
-              </el-button>
-              <el-button @click="runMonitorOnce" :loading="running">
-                {{ $t("monitor.config.runOnce") }}
-              </el-button>
-              <el-button
-                @click="testNotification"
-                :loading="testing"
-                type="success"
-              >
-                {{ $t("monitor.config.testNotification") }}
-              </el-button>
+            <el-form-item label-width="10px">
+              <div style="text-align: center; width: 100%">
+                <el-button type="primary" @click="saveConfig" :loading="saving">
+                  {{ $t("monitor.config.save") }}
+                </el-button>
+                <el-button @click="runMonitorOnce" :loading="running">
+                  {{ $t("monitor.config.runOnce") }}
+                </el-button>
+                <el-button
+                  @click="testNotification"
+                  :loading="testing"
+                  type="success"
+                >
+                  {{ $t("monitor.config.testNotification") }}
+                </el-button>
+              </div>
             </el-form-item>
           </el-form>
+        </el-card>
+      </el-tab-pane>
+
+      <!-- 监控状态 -->
+      <el-tab-pane :label="$t('monitor.tabs.status')" name="status">
+        <el-card>
+          <el-descriptions :column="2" border>
+            <el-descriptions-item :label="$t('monitor.status.monitorEnabled')">
+              <el-tag :type="status.enabled ? 'success' : 'danger'">
+                {{ status.enabled ? "已启用" : "已停用" }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('monitor.status.totalUsers')">
+              {{ status.total_users }} / {{ status.monitored_users }}
+              {{ $t("monitor.status.enabledUsers") }}
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('monitor.status.intervalHours')">
+              {{ status.interval_hours }}小时
+            </el-descriptions-item>
+            <el-descriptions-item :label="$t('monitor.status.notifiedVideos')">
+              {{ status.notified_videos_count }}
+            </el-descriptions-item>
+            <el-descriptions-item
+              :label="$t('monitor.status.feishuConfigured')"
+            >
+              <el-tag :type="status.feishu_configured ? 'success' : 'warning'">
+                {{ status.feishu_configured ? "已配置" : "未配置" }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item
+              :label="$t('monitor.status.schedulerRunning')"
+            >
+              <el-tag
+                :type="schedulerStatus.scheduler_running ? 'success' : 'danger'"
+              >
+                {{ schedulerStatus.scheduler_running ? "运行中" : "已停止" }}
+              </el-tag>
+            </el-descriptions-item>
+          </el-descriptions>
+
+          <div style="margin-top: 20px">
+            <el-button @click="loadStatus" :loading="loadingStatus">
+              刷新状态
+            </el-button>
+          </div>
         </el-card>
       </el-tab-pane>
     </el-tabs>
@@ -287,7 +297,7 @@ export default {
       enabled: false,
       interval_hours: 1,
       feishu_webhook_url: "",
-      videos_per_check: 20,
+      videos_per_check: 10,
       recent_hours: 24,
       enable_deduplication: true,
       dedup_cache_hours: 72,
