@@ -1,6 +1,22 @@
+douyin_monitor:
+  enabled: true
+  feishu:
+    webhook_url: https://open.feishu.cn/open-apis/bot/v2/hook/29e21c8d-498a-49bf-8bc1-80e21c1c9bed
+  interval_hours: 1
+  settings:
+    dedup_cache_hours: 72
+    enable_deduplication: true
+    recent_hours: 48
+    videos_per_check: 10
+  users:
+  - enabled: true
+    like_threshold: 41
+    nickname: 藤椒很麻呀²³⁵⁸ 🌶️
+    profile_url: https://www.douyin.com/user/MS4wLjABAAAA250wWQH1y6yH9TFbYBQIoal2suwu_01R6sE-OPeWaXk?author_id=888870295051540&enter_from=video_detail&enter_method=video_title&from_gid=7525321412706454843&from_tab_name=main&group_id=7525321412706454843&log_pb=%7B%22impr_id%22%3A%222025080411061157A484C8363F34514D6C%22%7D&relation=0&vid=7525321412706454843
+    sec_user_id: MS4wLjABAAAA250wWQH1y6yH9TFbYBQIoal2suwu_01R6sE-OPeWaXk
 logger:
-  type : file
-  level: INFO
   backupcount: 144
-  format: "[%(asctime)s][%(name)s][%(levelname)s]: %(message)s"
+  format: '[%(asctime)s][%(name)s][%(levelname)s]: %(message)s'
+  level: INFO
   path: .log/crawler.log
+  type: file

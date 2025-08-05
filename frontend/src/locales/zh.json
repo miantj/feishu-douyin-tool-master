@@ -70,6 +70,73 @@
     "errorLinkType": "字段类型错误，请设置为文本类型",
     "errorRequest": "Cookie 错误或请求超时"
   },
-  "finishTip": "数据获取完成, 请求失败数："
+  "finishTip": "数据获取完成, 请求失败数：",
+  
+  "monitor": {
+    "title": "抖音监控管理",
+    "subtitle": "管理抖音博主监控配置和用户列表",
+    "tabs": {
+      "config": "基础配置",
+      "users": "博主管理", 
+      "status": "监控状态"
+    },
+    "config": {
+      "enabled": "启用监控",
+      "interval": "监控间隔(小时)",
+      "feishuWebhook": "飞书Webhook地址",
+      "videosPerCheck": "每次检查视频数",
+      "recentHours": "监控最近N小时视频", 
+      "enableDeduplication": "启用去重",
+      "dedupCacheHours": "去重缓存时间(小时)",
+      "save": "保存配置",
+      "test": "测试通知",
+      "runOnce": "立即检查一次",
+      "testNotification": "测试通知"
+    },
+    "users": {
+      "add": "添加博主",
+      "edit": "编辑",
+      "delete": "删除",
+      "profileUrl": "主页地址",
+      "nickname": "博主昵称",
+      "likeThreshold": "点赞阈值",
+      "enabled": "启用",
+      "status": "状态",
+      "actions": "操作"
+    },
+    "dialog": {
+      "addUser": "添加监控博主",
+      "editUser": "编辑监控博主",
+      "deleteConfirm": "确定要删除这个博主吗？",
+      "profileUrlPlaceholder": "请输入抖音主页地址 (如: https://www.douyin.com/user/...)",
+      "nicknamePlaceholder": "请输入博主昵称",
+      "likeThresholdPlaceholder": "请输入点赞数阈值",
+      "webhookPlaceholder": "请输入飞书机器人Webhook地址"
+    },
+    "status": {
+      "monitorEnabled": "监控状态",
+      "totalUsers": "监控博主数",
+      "enabledUsers": "启用中",
+      "intervalHours": "检查间隔",
+      "lastCheck": "上次检查",
+      "nextCheck": "下次检查",
+      "notifiedVideos": "已通知视频数",
+      "feishuConfigured": "飞书配置",
+      "schedulerRunning": "调度器状态"
+    },
+    "messages": {
+      "configSaved": "配置保存成功",
+      "userAdded": "博主添加成功",
+      "userUpdated": "博主更新成功", 
+      "userDeleted": "博主删除成功",
+      "testSent": "测试通知已发送",
+      "monitorStarted": "监控已启动",
+      "monitorStopped": "监控已停止",
+      "runOnceSuccess": "立即执行成功",
+      "loadError": "加载数据失败",
+      "saveError": "保存失败",
+      "deleteError": "删除失败"
+    }
+  }
 
 } 

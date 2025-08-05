@@ -17,7 +17,7 @@ async def user_posts(sec_user_id: str, max_cursor: int = 0):
         if account.get('expired', 0) == 1:
             continue
         account_id = account.get('id', '')
-        res, succ = await request_user_posts(sec_user_id, max_cursor, account.get('cookie', ''))
+        res, succ = await request_user_posts(sec_user_id, max_cursor, account.get('cookie', ''), 18)
         if res == {} or not succ:
             logger.error(f'get user posts failed. account: {account_id}, sec_user_id: {sec_user_id}')
             continue

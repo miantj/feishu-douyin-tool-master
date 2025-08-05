@@ -1,16 +1,23 @@
 <template>
-  <el-form ref="form" class="form" label-position="top">
-    <div
-      style="
-        width: 100%;
-        padding-left: 10px;
-        border-left: 5px solid #2598f8;
-        margin-bottom: 20px;
-        padding-top: 5px;
-      "
-    >
-      {{ $t("title") }}
+  <div class="home-container">
+    <div class="header">
+      <div
+        style="
+          width: 100%;
+          padding-left: 10px;
+          border-left: 5px solid #2598f8;
+          margin-bottom: 20px;
+          padding-top: 5px;
+        "
+      >
+        {{ $t("title") }}
+      </div>
     </div>
+
+    <el-tabs v-model="activeTab" type="border-card">
+      <!-- 数据获取 -->
+      <el-tab-pane label="数据获取" name="data">
+        <el-form ref="form" class="form" label-position="top">
     <el-alert
       style="margin: 20px 0; color: #606266"
       :title="$t('alerts.selectNumberField')"
@@ -146,13 +153,22 @@
       size="large"
       >{{ $t("submit") }}</el-button
     >
-  </el-form>
+        </el-form>
+      </el-tab-pane>
+
+      <!-- 监控管理 -->
+      <el-tab-pane label="监控管理" name="monitor">
+        <MonitorManage />
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script setup>
 import { bitable, FieldType } from "@lark-base-open/js-sdk";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, computed } from "vue";
+import MonitorManage from "./MonitorManage.vue";
 import {
   completeMappedFields,
   getCellValueByCell,
@@ -169,6 +185,9 @@ import { watch } from "vue";
 // -- 数据区域
 const { t } = useI18n();
 const lang = i18n.global.locale;
+
+// 标签页控制
+const activeTab = ref('data');
 
 const canChooseDateType = ref(config.dataType);
 const dataType = ref(config.dataType[0]);

@@ -1,6 +1,6 @@
 from .common import common_request
 
-async def request_user_posts(sec_user_id: str, max_cursor: int, cookie: str) -> tuple[dict, bool]:
+async def request_user_posts(sec_user_id: str, max_cursor: int, cookie: str, count: int = 18) -> tuple[dict, bool]:
     """
     请求抖音获取用户发布的视频列表
     :param sec_user_id: 用户ID

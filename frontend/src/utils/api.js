@@ -3938,6 +3938,100 @@ const request = async (url, data = {}) => {
   }
 };
 
+// ================== 监控管理相关 API ==================
+
+/**
+ * 获取监控状态
+ */
+const getMonitorStatus = () => {
+  return api.get("/monitor/status");
+};
+
+/**
+ * 获取调度器状态
+ */
+const getSchedulerStatus = () => {
+  return api.get("/monitor/scheduler/status");
+};
+
+/**
+ * 立即执行一次监控
+ */
+const runMonitorOnce = () => {
+  return api.post("/monitor/run-once");
+};
+
+/**
+ * 获取监控配置
+ */
+const getMonitorConfig = () => {
+  return api.get("/monitor/config");
+};
+
+/**
+ * 更新监控配置
+ */
+const updateMonitorConfig = (config) => {
+  return api.put("/monitor/config", config);
+};
+
+/**
+ * 获取监控用户列表
+ */
+const getMonitorUsers = () => {
+  return api.get("/monitor/config/users");
+};
+
+/**
+ * 添加监控用户
+ */
+const addMonitorUser = (user) => {
+  return api.post("/monitor/config/users", user);
+};
+
+/**
+ * 更新监控用户
+ */
+const updateMonitorUser = (userId, user) => {
+  return api.put(`/monitor/config/users/${userId}`, user);
+};
+
+/**
+ * 删除监控用户
+ */
+const deleteMonitorUser = (userId) => {
+  return api.delete(`/monitor/config/users/${userId}`);
+};
+
+/**
+ * 切换监控开关
+ */
+const toggleMonitor = (enabled) => {
+  return api.post("/monitor/config/toggle", { enabled });
+};
+
+/**
+ * 测试飞书通知
+ */
+const testNotification = () => {
+  return api.post("/monitor/test-notification");
+};
+
+// 监控管理API对象
+const monitorApi = {
+  getMonitorStatus,
+  getSchedulerStatus,
+  runMonitorOnce,
+  getMonitorConfig,
+  updateMonitorConfig,
+  getMonitorUsers,
+  addMonitorUser,
+  updateMonitorUser,
+  deleteMonitorUser,
+  toggleMonitor,
+  testNotification,
+};
+
 // 导出
 export default service;
-export { api, douyinApi, redbookApi, request };
+export { api, douyinApi, redbookApi, request, monitorApi };
