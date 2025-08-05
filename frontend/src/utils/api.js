@@ -178,6 +178,14 @@ const api = {
 
 // 根据项目配置封装具体的API方法
 const douyinApi = {
+  // 添加抖音账号
+  async addDouyinAccount(cookie) {
+    // 从cookie中提取id
+    const id = cookie.match(/passport_csrf_token=([^;]+)/)?.[1] || '';
+    const response = await api.post(`/douyin/add_account`, { id, cookie });
+    return response;
+  },
+
   // 获取抖音视频信息
   async getGouyinDetail(link) {
     const item_ids = link.match(/video\/(\d+)/)?.[1] || "";

@@ -43,7 +43,7 @@
   "labels": {
     "dataType": "获取数据类型",
     "link": "链接所在列",
-    "cookie": "ttwid Cookie",
+    "cookie": "Cookie",
     "xhsCookie": "Cookie",
     "xSCommon": "X-S-Common"
   },

@@ -59,9 +59,27 @@
     </el-form-item> -->
 
     <!-- cookie 输入框 -->
-    <!-- <el-form-item style="margin-top: 20px;" :label="$t('labels.cookie')" size="large" required v-if="dataType.value == 'douyinDetail'">
-      <el-input v-model="cookie" type="text" :placeholder="$t('placeholder.cookie')"></el-input>
-    </el-form-item> -->
+    <el-form-item
+      style="margin-top: 20px"
+      :label="$t('labels.cookie')"
+      size="large"
+      v-if="dataType.value.includes('douyin')"
+    >
+      <el-input
+        v-model="cookie"
+        type="text"
+        :placeholder="$t('placeholder.cookie')"
+        style="width: 64%"
+        clearable
+      ></el-input>
+      <el-button
+        @click="addDouyinAccount"
+        type="primary"
+        plain
+        style="margin-left: 10px"
+        >添加账号</el-button
+      >
+    </el-form-item>
 
     <!-- 链接所在列 -->
     <!-- <el-form-item
@@ -181,6 +199,11 @@ const xSCommon = ref("");
 
 // 字段在表格对应的列
 const mappedFieldIds = ref({});
+
+const addDouyinAccount = async () => {
+  const response = await douyinApi.addDouyinAccount(cookie.value);
+  console.log("addDouyinAccount() >> response", response);
+};
 
 // -- 核心算法区域
 // --001== 写入数据
