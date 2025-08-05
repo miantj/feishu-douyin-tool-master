@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from importlib import import_module
 from lib.logger import logger
 import uvicorn
@@ -11,10 +13,19 @@ CONFIG_PATH = ''
 
 app = FastAPI()
 
+# 挂载静态文件目录
+app.mount("/assets", StaticFiles(directory="frontend/dist/assets"), name="assets")
+app.mount("/static", StaticFiles(directory="frontend/dist"), name="static")
+
+# 添加根路径路由，返回前端页面
+@app.get("/")
+async def read_root():
+    return FileResponse("frontend/dist/index.html")
+
 # 配置 CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # 允许的前端域名
+    allow_origins=["http://localhost:5173", "http://localhost:8080", "http://127.0.0.1:8080"],  # 允许的前端域名
     allow_credentials=True,
     allow_methods=["*"],  # 允许所有方法
     allow_headers=["*"],  # 允许所有请求头
