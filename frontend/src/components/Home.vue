@@ -18,78 +18,78 @@
       <!-- 数据获取 -->
       <el-tab-pane label="数据获取" name="data">
         <el-form ref="form" class="form" label-position="top">
-    <el-alert
-      style="margin: 20px 0; color: #606266"
-      :title="$t('alerts.selectNumberField')"
-      type="info"
-    />
-    <div class="helper-doc">
-      <span>{{ $t("helpTip") }}</span>
-      <span style="height: 16px; width: 16px; margin-left: 12px">
-        <a
-          href="https://aigccamp.feishu.cn/wiki/LvQRwI1A4iYtnMkOBtZc2zfsnMd"
-          target="_blank"
-          ><span>说明文档</span></a
-        >
-      </span>
-    </div>
+          <el-alert
+            style="margin: 20px 0; color: #606266"
+            :title="$t('alerts.selectNumberField')"
+            type="info"
+          />
+          <div class="helper-doc">
+            <span>{{ $t("helpTip") }}</span>
+            <span style="height: 16px; width: 16px; margin-left: 12px">
+              <a
+                href="https://aigccamp.feishu.cn/wiki/LvQRwI1A4iYtnMkOBtZc2zfsnMd"
+                target="_blank"
+                ><span>说明文档</span></a
+              >
+            </span>
+          </div>
 
-    <!-- 获取数据类型 -->
-    <el-form-item
-      style="margin-top: 40px"
-      :label="$t('labels.dataType')"
-      size="large"
-      required
-    >
-      <el-select
-        v-model="dataType"
-        :placeholder="$t('placeholder.dataType')"
-        style="width: 100%"
-      >
-        <el-option
-          v-for="meta in canChooseDateType"
-          :key="meta.value"
-          :label="meta.label"
-          :value="meta"
-        />
-      </el-select>
-    </el-form-item>
+          <!-- 获取数据类型 -->
+          <el-form-item
+            style="margin-top: 40px"
+            :label="$t('labels.dataType')"
+            size="large"
+            required
+          >
+            <el-select
+              v-model="dataType"
+              :placeholder="$t('placeholder.dataType')"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="meta in canChooseDateType"
+                :key="meta.value"
+                :label="meta.label"
+                :value="meta"
+              />
+            </el-select>
+          </el-form-item>
 
-    <!-- xhsCookie 输入框 -->
-    <!-- <el-form-item style="margin-top: 20px;" :label="$t('labels.xhsCookie')" size="large" required v-if="dataType.value != 'douyinDetail'">
+          <!-- xhsCookie 输入框 -->
+          <!-- <el-form-item style="margin-top: 20px;" :label="$t('labels.xhsCookie')" size="large" required v-if="dataType.value != 'douyinDetail'">
       <el-input v-model="xhsCookie" type="text" :placeholder="$t('placeholder.xhsCookie')"></el-input>
     </el-form-item> -->
 
-    <!-- X-S-Common 输入框 -->
-    <!-- <el-form-item style="margin-top: 20px;" :label="$t('labels.xSCommon')" size="large" v-if="dataType.value != 'douyinDetail'">
+          <!-- X-S-Common 输入框 -->
+          <!-- <el-form-item style="margin-top: 20px;" :label="$t('labels.xSCommon')" size="large" v-if="dataType.value != 'douyinDetail'">
       <el-input v-model="xSCommon" type="text" :placeholder="$t('placeholder.xSCommon')"></el-input>
     </el-form-item> -->
 
-    <!-- cookie 输入框 -->
-    <el-form-item
-      style="margin-top: 20px"
-      :label="$t('labels.cookie')"
-      size="large"
-      v-if="dataType.value.includes('douyin')"
-    >
-      <el-input
-        v-model="cookie"
-        type="text"
-        :placeholder="$t('placeholder.cookie')"
-        style="width: 64%"
-        clearable
-      ></el-input>
-      <el-button
-        @click="addDouyinAccount"
-        type="primary"
-        plain
-        style="margin-left: 10px"
-        >添加账号</el-button
-      >
-    </el-form-item>
+          <!-- cookie 输入框 -->
+          <el-form-item
+            style="margin-top: 20px"
+            :label="$t('labels.cookie')"
+            size="large"
+            v-if="dataType.value.includes('douyin')"
+          >
+            <el-input
+              v-model="cookie"
+              type="text"
+              :placeholder="$t('placeholder.cookie')"
+              style="width: 64%"
+              clearable
+            ></el-input>
+            <el-button
+              @click="addDouyinAccount"
+              type="primary"
+              plain
+              style="margin-left: 10px"
+              >添加账号</el-button
+            >
+          </el-form-item>
 
-    <!-- 链接所在列 -->
-    <!-- <el-form-item
+          <!-- 链接所在列 -->
+          <!-- <el-form-item
       style="margin-top: 40px"
       :label="$t('labels.link')"
       size="large"
@@ -109,50 +109,50 @@
       </el-select>
     </el-form-item> -->
 
-    <!-- 字段选择 -->
-    <div class="map-fields-checklist">
-      <el-checkbox
-        v-model="checkAllToMap"
-        :indeterminate="isIndeterminateToMap"
-        @change="handlecheckAllToMapChange"
-        >{{ $t("selectGroup.selectAll") }}</el-checkbox
-      >
-      <el-checkbox-group
-        v-model="checkedFieldsToMap"
-        @change="handleCheckedFieldsToMapChange"
-      >
-        <el-checkbox
-          v-for="fieldToMap in fieldsToMap"
-          :key="fieldToMap.label"
-          :label="fieldToMap.label"
-        >
-          {{ fieldToMap.name }}
-        </el-checkbox>
-      </el-checkbox-group>
-    </div>
-    <el-alert
-      style="
-        display: flex;
-        align-items: flex-start;
-        margin: 20px 0;
-        background-color: #e1eaff;
-        color: #606266;
-      "
-      :title="$t('alerts.selectGroupFieldTip')"
-      type="info"
-      show-icon
-    />
+          <!-- 字段选择 -->
+          <div class="map-fields-checklist">
+            <el-checkbox
+              v-model="checkAllToMap"
+              :indeterminate="isIndeterminateToMap"
+              @change="handlecheckAllToMapChange"
+              >{{ $t("selectGroup.selectAll") }}</el-checkbox
+            >
+            <el-checkbox-group
+              v-model="checkedFieldsToMap"
+              @change="handleCheckedFieldsToMapChange"
+            >
+              <el-checkbox
+                v-for="fieldToMap in fieldsToMap"
+                :key="fieldToMap.label"
+                :label="fieldToMap.label"
+              >
+                {{ fieldToMap.name }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+          <el-alert
+            style="
+              display: flex;
+              align-items: flex-start;
+              margin: 20px 0;
+              background-color: #e1eaff;
+              color: #606266;
+            "
+            :title="$t('alerts.selectGroupFieldTip')"
+            type="info"
+            show-icon
+          />
 
-    <!-- 提交按钮 -->
-    <el-button
-      v-loading="isWritingData"
-      @click="writeData"
-      color="#3370ff"
-      type="primary"
-      plain
-      size="large"
-      >{{ $t("submit") }}</el-button
-    >
+          <!-- 提交按钮 -->
+          <el-button
+            v-loading="isWritingData"
+            @click="writeData"
+            color="#3370ff"
+            type="primary"
+            plain
+            size="large"
+            >{{ $t("submit") }}</el-button
+          >
         </el-form>
       </el-tab-pane>
 
@@ -187,7 +187,7 @@ const { t } = useI18n();
 const lang = i18n.global.locale;
 
 // 标签页控制
-const activeTab = ref('data');
+const activeTab = ref("data");
 
 const canChooseDateType = ref(config.dataType);
 const dataType = ref(config.dataType[0]);
@@ -294,7 +294,7 @@ const writeData = async () => {
         // 显示进度提示
         await bitable.ui.showToast({
           toastType: "info",
-          message: `正在处理 ${infoData.length} 条视频数据，请稍等...`,
+          message: `正在处理 ${infoData.length ?? 1} 条视频数据，请稍等...`,
         });
         if (Array.isArray(infoData)) {
           // 逐条处理并写入，而不是批量写入

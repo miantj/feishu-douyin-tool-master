@@ -366,3 +366,60 @@ async def send_video_notification(video_info: Dict[str, Any]) -> bool:
         return False
 
     return await _feishu_notifier.send_card_message(video_info)
+
+async def send_cookie_expired_notification(platform: str, account_id: str) -> bool:
+    """
+    发送Cookie过期通知
+    :param platform: 平台名称（如：抖音、微博等）
+    :param account_id: 账号ID
+    :return: 是否发送成功
+    """
+    if not _feishu_notifier:
+        logger.warning("飞书通知器未初始化")
+        return False
+
+    # 获取当前时间
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    message = {
+        "msg_type": "interactive",
+        "card": {
+            "config": {"wide_screen_mode": True},
+            "elements": [
+                # 账号信息区块
+                {
+                    "tag": "div",
+                    "text": {
+                        "content": f"**⚠️ {platform}账号 Cookie已过期**\n账号ID: {account_id}",
+                        "tag": "lark_md",
+                    },
+                },
+                # 分隔线
+                {"tag": "hr"},
+                # 时间信息
+                {
+                    "tag": "div",
+                    "text": {
+                        "content": f"🕐 **过期时间：** {current_time}",
+                        "tag": "lark_md",
+                    },
+                },
+                # 提示信息
+                {
+                    "tag": "div",
+                    "text": {
+                        "content": "请及时更新Cookie以确保服务正常运行",
+                        "tag": "lark_md",
+                    },
+                },
+            ],
+            "header": {
+                "title": {
+                    "content": "🔔 Cookie过期提醒",
+                    "tag": "plain_text",
+                },
+                "template": "red",
+            },
+        },
+    }
+    return await _feishu_notifier._send_message(message)

@@ -1,6 +1,7 @@
 from lib.logger import logger
 from bs4 import BeautifulSoup
 from lib import requests
+from utils.cookie_manager import check_cookie_expired
 import urllib.parse
 import time
 import hashlib
@@ -73,12 +74,22 @@ async def common_request(host: str, uri: str, params: dict, headers: dict, doc: 
     if doc:
         return response.text, response.text != ''
 
-    if response.json().get('code', 0) != 0:
+    response_json = response.json()
+    if response_json.get('code', 0) != 0:
         logger.error(
             f'url: {url}, params: {params}, request error, code: {response.status_code}, body: {response.text}')
-        return response.json(), False
+        
+        # 检查Cookie是否过期
+        cookie = headers.get('cookie', '') or headers.get('Cookie', '')
+        if cookie:
+            account_id = cookie.split(';')[0].split('=')[1] if '=' in cookie.split(';')[0] else 'unknown'
+            is_expired, _ = await check_cookie_expired(response_json, 'bilibili', account_id)
+            if is_expired:
+                logger.warning(f'Cookie已过期: account_id={account_id}')
+        
+        return response_json, False
 
-    return response.json(), True
+    return response_json, True
 
 
 def extract_outermost_json(text):
