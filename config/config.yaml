@@ -5,7 +5,7 @@ douyin_monitor:
   interval_hours: 1
   settings:
     dedup_cache_hours: 72
-    enable_deduplication: true
+    enable_deduplication: false
     recent_hours: 48
     videos_per_check: 10
   users:

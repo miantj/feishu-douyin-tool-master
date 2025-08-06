@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY . .
 
+# Build frontend
+RUN cd frontend && npm install && npm run build
+
 ENV FILE=config/docker-config.yaml
 
 EXPOSE 8080
