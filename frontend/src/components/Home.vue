@@ -176,9 +176,8 @@ import {
   addRecords,
 } from "../utils/tableUtils.js";
 // 导入方式
-import { api, douyinApi, redbookApi, request } from "@/utils/api.js";
+import { douyinApi } from "@/utils/api.js";
 import { config } from "../utils/config.js";
-import { GetID } from "../utils/index.js";
 import { i18n } from "../locales/i18n.js";
 import { watch } from "vue";
 
@@ -199,10 +198,16 @@ const fieldsToMap = computed(() =>
     name: config.feilds[field][lang],
   }))
 );
+
+// 当数据类型改变时，选中除视频相关字段外的所有字段
+const videoRelatedFields = ["videoFile"];
 // 已选择字段
-const checkedFieldsToMap = ref(canChooseField.value); // 默认的to-map的字段
+const checkedFieldsToMap = ref([]);
+
 watch(canChooseField, () => {
-  checkedFieldsToMap.value = canChooseField.value;
+  checkedFieldsToMap.value = canChooseField.value.filter(
+    (field) => !videoRelatedFields.includes(field)
+  );
 });
 
 const fieldListSeView = ref([]);
@@ -371,6 +376,11 @@ const handleCheckedFieldsToMapChange = (value) => {
 };
 
 onMounted(async () => {
+  // 初始化选中除视频相关字段外的所有字段
+  checkedFieldsToMap.value = canChooseField.value.filter(
+    (field) => !videoRelatedFields.includes(field)
+  );
+
   // 获取字段列表 -- start
   const selection = await bitable.base.getSelection();
   const table = await bitable.base.getActiveTable();
