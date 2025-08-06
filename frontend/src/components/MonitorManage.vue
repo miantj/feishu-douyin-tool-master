@@ -506,8 +506,9 @@ export default {
         return;
       }
 
-      // 验证抖音URL格式
-      if (!currentUser.profile_url.includes("douyin.com/user/")) {
+      // 验证抖音URL格式（支持短链接和完整链接）
+      const douyinUrlPattern = /douyin\.com/i;
+      if (!douyinUrlPattern.test(currentUser.profile_url)) {
         ElMessage.warning("请输入有效的抖音主页地址");
         return;
       }

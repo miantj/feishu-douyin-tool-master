@@ -3,6 +3,8 @@
 """
 import yaml
 import os
+import fcntl
+import time
 from typing import Dict, List
 from fastapi import HTTPException
 from pydantic import BaseModel
@@ -49,16 +51,32 @@ def _load_config() -> Dict:
         raise HTTPException(status_code=500, detail=f"加载配置文件失败: {str(e)}")
 
 
-def _save_config(config: Dict) -> bool:
-    """保存配置文件"""
+def _save_config(config: Dict) -> Dict[str, any]:
+    """保存配置文件（带文件锁）"""
     config_path = _get_config_path()
+    temp_path = config_path + '.tmp'
     try:
-        with open(config_path, 'w', encoding='utf-8') as f:
+        # 先写入临时文件，然后原子性替换
+        with open(temp_path, 'w', encoding='utf-8') as f:
+            # 获取文件锁
+            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
             yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
-        return True
+            f.flush()
+            os.fsync(f.fileno())  # 确保数据写入磁盘
+        
+        # 原子性替换文件
+        os.replace(temp_path, config_path)
+        return {"success": True, "error": None}
     except Exception as e:
-        logger.error(f"保存配置文件失败: {e}")
-        return False
+        error_msg = str(e)
+        logger.error(f"保存配置文件失败: {error_msg}")
+        # 清理临时文件
+        try:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+        except:
+            pass
+        return {"success": False, "error": error_msg}
 
 
 async def get_monitor_config():
@@ -129,8 +147,9 @@ async def update_monitor_config(config_data: MonitorConfigModel):
         settings['dedup_cache_hours'] = config_data.dedup_cache_hours
         
         # 保存配置
-        if not _save_config(config):
-            return reply(ErrorCode.ERROR, '保存配置文件失败')
+        save_result = _save_config(config)
+        if not save_result['success']:
+            return reply(ErrorCode.ERROR, f'保存配置文件失败: {save_result["error"]}')
         
         # 重新初始化监控器
         await _reload_monitor_config()
@@ -219,8 +238,9 @@ async def add_monitor_user(user_data: MonitorUserModel):
         users.append(new_user)
         
         # 保存配置
-        if not _save_config(config):
-            return reply(ErrorCode.ERROR, '保存配置文件失败')
+        save_result = _save_config(config)
+        if not save_result['success']:
+            return reply(ErrorCode.ERROR, f'保存配置文件失败: {save_result["error"]}')
         
         # 重新初始化监控器
         await _reload_monitor_config()
@@ -277,8 +297,9 @@ async def update_monitor_user(user_id: int, user_data: MonitorUserModel):
         }
         
         # 保存配置
-        if not _save_config(config):
-            return reply(ErrorCode.ERROR, '保存配置文件失败')
+        save_result = _save_config(config)
+        if not save_result['success']:
+            return reply(ErrorCode.ERROR, f'保存配置文件失败: {save_result["error"]}')
         
         # 重新初始化监控器
         await _reload_monitor_config()
@@ -306,8 +327,9 @@ async def delete_monitor_user(user_id: int):
         deleted_user = users.pop(user_id)
         
         # 保存配置
-        if not _save_config(config):
-            return reply(ErrorCode.ERROR, '保存配置文件失败')
+        save_result = _save_config(config)
+        if not save_result['success']:
+            return reply(ErrorCode.ERROR, f'保存配置文件失败: {save_result["error"]}')
         
         # 重新初始化监控器
         await _reload_monitor_config()
@@ -341,8 +363,9 @@ async def toggle_monitor(data: dict = None):
         config['douyin_monitor']['enabled'] = enabled
         
         # 保存配置
-        if not _save_config(config):
-            return reply(ErrorCode.ERROR, '保存配置文件失败')
+        save_result = _save_config(config)
+        if not save_result['success']:
+            return reply(ErrorCode.ERROR, f'保存配置文件失败: {save_result["error"]}')
         
         # 重新初始化监控器
         await _reload_monitor_config()

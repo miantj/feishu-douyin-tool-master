@@ -61,13 +61,27 @@ class DouyinMonitor:
             
         logger.info(f"开始抖音监控，间隔：{self.interval_hours}小时，监控用户数：{len(self.users)}")
         
+        retry_count = 0
+        max_retries = 5
+        base_delay = 60  # 基础延迟60秒
+        
         while True:
             try:
                 await self.check_all_users()
+                retry_count = 0  # 成功后重置重试计数
                 await asyncio.sleep(self.interval_hours * 3600)  # 转换为秒
             except Exception as e:
-                logger.error(f"监控过程中发生异常: {e}")
-                await asyncio.sleep(60)  # 出错后等待1分钟再重试
+                retry_count += 1
+                delay = min(base_delay * (2 ** (retry_count - 1)), 3600)  # 指数退避，最大1小时
+                logger.error(f"监控过程中发生异常 (第{retry_count}次): {e}")
+                
+                if retry_count >= max_retries:
+                    logger.error(f"连续失败{max_retries}次，暂停监控1小时")
+                    delay = 3600
+                    retry_count = 0
+                
+                logger.info(f"等待{delay}秒后重试...")
+                await asyncio.sleep(delay)
     
     async def check_all_users(self):
         """检查所有用户的视频"""

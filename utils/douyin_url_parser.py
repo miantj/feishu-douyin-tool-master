@@ -65,10 +65,10 @@ async def get_sec_user_id_from_any_url(url: str) -> str:
         return sec_user_id
     
     # 如果是短链接，先解析
-    if 'v.douyin.com' in url or 'douyin.com' in url and len(url) < 50:
+    if 'v.douyin.com' in url or ('douyin.com' in url and len(url) < 100):
         logger.info(f"检测到短链接，正在解析: {url}")
         full_url = await resolve_douyin_short_url(url)
-        if full_url:
+        if full_url and full_url.strip():  # 检查full_url不为空且不是空白字符串
             sec_user_id = extract_sec_user_id_from_url(full_url)
             if sec_user_id:
                 return sec_user_id
